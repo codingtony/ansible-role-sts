@@ -1,4 +1,11 @@
+- name: Check if STS already installed
+  stat: 
+    path: /usr/local/bin/STS
+  register: sts_installed
 - include: install_{{ ansible_distribution }}.yml
+  when: sts_installed.stat.exists == false
+
 - debug: var=sts_home
 - debug: var=sts
 - file: src={{ sts }} dest=/usr/local/bin/STS state=link
+  when: sts_installed.stat.exists == false
